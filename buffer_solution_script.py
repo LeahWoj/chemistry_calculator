@@ -10,8 +10,6 @@ def get_desired_pH() -> float:
     while True:
         try:
             desired_pH = float(input("Enter the desired pH of your buffer solution: "))
-            print(f"Your desired pH is {desired_pH}") #restates pH, will remove later
-            return desired_pH
         except ValueError: #fail case sends user back to pH question
             print("Invalid input. Please enter a numeric value.")
 
