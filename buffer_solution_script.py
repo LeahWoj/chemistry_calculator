@@ -1,5 +1,5 @@
 #₊˚ ✧ ━━━━⊱⋆⊰━━━━ ✧ ₊˚DEPENDENCIES₊˚ ✧ ━━━━⊱⋆⊰━━━━ ✧ ₊˚
-#from time import time
+#none currently
 
 #-----GLOBAL VARIABLES-----
 
@@ -14,6 +14,8 @@ def introduction():
     "specific pH and volume using the pKa of the conjugate acid-base pair.")
     print("Please input quantities in the specified units.")
     
+#Validator functions    
+
 def validate_pH(raw_pH: str) -> float:  
     try:
         pH_value = float(raw_pH)
@@ -21,8 +23,7 @@ def validate_pH(raw_pH: str) -> float:
         raise ValueError("Please enter a numeric value!")
     if not 0 <= pH_value <= 14:
         raise ValueError("Please enter a pH between 0 and 14!")
-    return pH_value
-     
+    return pH_value 
 def validate_pKa(raw_pKa: str) -> float:  
     """Validates the pKa value entered by the user."""
     try:
@@ -30,18 +31,12 @@ def validate_pKa(raw_pKa: str) -> float:
     except ValueError:
         raise ValueError("Please enter a numeric value!")
     if pKa_value < 0:
-        raise ValueError(f"A negative pKa for a conjugate acid-base pair " 
+        raise ValueError("A negative pKa for a conjugate acid-base pair " 
             "requires a non-aqueous solvent. The Henderson-Hasselbalch equation " 
             "is altered in this case, and out of the scope of this calculator."
             )
     return pKa_value
         
-def pKa_warning(value: float) -> str | None:
-    """Issues a warning if the pKa value is outside the common range for buffers."""
-    if value > 14:
-        return("Although pKas above 14 are possible, they are less common in buffers. Please proceed with caution.")
-    return None
-
 def validate_number(raw_number: str, name: str = "Value") -> float:
     """Convert text to a finite number greater than 0, or raise ValueError."""
     try:
@@ -51,6 +46,33 @@ def validate_number(raw_number: str, name: str = "Value") -> float:
     if not 0 < number < float("inf"):
         raise ValueError(f"{name} must be greater than 0!")
     return number
+
+def validate_text(text:str) -> str:
+    """Validates that the input text is not empty."""
+    if not text.strip():
+        raise ValueError("Please enter your answer")
+    return text.strip()
+
+#---INPUT FUNCTIONS---
+
+
+def get_acid_name() -> str:
+    """Prompt user to enter the name of the HA of the buffer solution."""
+    while True:
+        raw_acid_name = str(input("Enter the name of the acid component: "))
+        try:
+            return validate_text(raw_acid_name)
+        except ValueError as e:
+            print(e)
+            
+def get_base_name() -> str:
+    """Prompt user to enter the name of the A- of the buffer solution."""
+    while True:
+        raw_base_name = input("Enter the name of the base component: ")
+        try:
+            return validate_text(raw_base_name)
+        except ValueError as e:
+            print(e)
 
 def get_desired_pH() -> float:
     """Prompts the user to enter the desired pH of the buffer solution."""
@@ -99,15 +121,37 @@ def get_desired_molarity() -> float:
             continue
         print(f"Your desired molarity is {molarity} ")
         return molarity
+    
+#Warnings functions
 
-def main(): #manager function to avoid nested functios
-    global desired_pH, desired_volume
+def pKa_warning(value: float) -> str | None:
+    """Issues a warning if the pKa value is outside the common range for buffers."""
+    if value > 14:
+        return("Although pKas above 14 are possible, they are less common in buffers. Please proceed with caution.")
+    return None
+
+#need to add a function for desired pH too far from pKa
+
+def main(): #manager function to avoid nested functions
     introduction()
     desired_pH = get_desired_pH()
     desired_pKa = get_desired_pKa()
-    desired_volume = get_desired_volume()
+    desired_volume_l = get_desired_volume()
     molarity = get_desired_molarity()
 
 if __name__ == "__main__": #entry point for the script
     main()
 
+
+#checklist:
+#acid name
+#base name
+#final volume, done
+#final molarity, done
+#desired pH, done
+#relevant pKa, done: need to rename from "desired"
+#acid molar mass
+#base molar mass
+#order should most likely be: acid name, acid mass,
+#base name, base mass relevant
+#pka, #final volume, #final molarity
